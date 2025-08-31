@@ -8,7 +8,7 @@ import { Footer } from '@/components/Footer';
 import { ContactForm } from '@/components/ContactForm';
 import { PortfolioPage } from '@/pages/PortfolioPage';
 import { AdminPage } from '@/pages/AdminPage';
-import { getVideoUrl, getThumbnailUrl } from '@/utils/supabaseUrls';
+import { getVideoUrl, getThumbnailUrl, FAVICON_URL } from '@/utils/supabaseUrls';
 import type { PageType, VideoItem } from '@/types';
 import './App.css';
 
@@ -243,7 +243,7 @@ function App() {
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  // Update page title based on current page
+  // Update page title and favicon based on current page
   React.useEffect(() => {
     const titles = {
       home: 'HELYX Media',
@@ -251,6 +251,14 @@ function App() {
       admin: 'Admin Panel | HELYX Media'
     };
     document.title = titles[currentPage];
+
+    // Update favicon to use Supabase URL if available
+    if (import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_URL !== 'https://demo.supabase.co') {
+      const favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+      if (favicon) {
+        favicon.href = FAVICON_URL;
+      }
+    }
   }, [currentPage]);
 
   const handleVideoClick = useCallback((video: VideoItem) => {

@@ -1,11 +1,12 @@
 // src/components/Header/index.tsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import type { HeaderProps, PageType } from '@/types';
 import styles from './Header.module.css';
 
 export const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let ticking = false;
@@ -23,6 +24,23 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) =
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Закрытие мобильного меню при клике вне его
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMobileMenuOpen && mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
 
   const scrollToSection = useCallback((sectionId: string) => {
     if (currentPage !== 'home') {
@@ -83,7 +101,18 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) =
           <span className={styles.logoMedia}>media</span>
         </div>
         
-        <ul className={`${styles.navLinks} ${isMobileMenuOpen ? styles.active : ''}`}>
+        <ul ref={mobileMenuRef} className={`${styles.navLinks} ${isMobileMenuOpen ? styles.active : ''}`}>
+          {isMobileMenuOpen && (
+            <li className={styles.mobileCloseButton}>
+              <button
+                className={styles.closeButton}
+                onClick={() => setIsMobileMenuOpen(false)}
+                aria-label="Close menu"
+              >
+                ✕
+              </button>
+            </li>
+          )}
           <li>
             <button
               className={styles.navLink}

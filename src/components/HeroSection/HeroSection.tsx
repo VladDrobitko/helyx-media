@@ -11,6 +11,7 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({ className }
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Обработчик загрузки метаданных
   const handleLoadedMetadata = () => {

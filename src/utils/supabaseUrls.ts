@@ -26,6 +26,9 @@ export const THUMBNAIL_URLS = {
   video2Poster: getSupabaseFileUrl('thumbnails', 'video2-poster.jpeg'),
 };
 
+// Favicon URL
+export const FAVICON_URL = getSupabaseFileUrl('thumbnails', 'favicon.ico');
+
 // Fallback to local files if Supabase is not configured
 export const getVideoUrl = (videoKey: keyof typeof VIDEO_URLS): string => {
   if (!import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL === 'https://demo.supabase.co') {

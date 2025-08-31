@@ -177,64 +177,8 @@ export const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, videoDa
                 onClick={handleVideoClick}
                 preload="metadata"
                 playsInline
+                controls
               />
-
-              {/* Play Overlay */}
-              {!isPlaying && (
-                <div className={styles.videoPlayOverlay} onClick={togglePlay}>
-                  <div className={styles.videoPlayButton}>
-                    ▶
-                  </div>
-                </div>
-              )}
-
-              {/* Progress Bar */}
-              <div 
-                className={styles.progressContainer}
-                onClick={handleProgressClick}
-              >
-                <div 
-                  className={styles.progressBar}
-                  style={{ width: duration > 0 ? `${(currentTime / duration) * 100}%` : '0%' }}
-                />
-              </div>
-
-              {/* Controls */}
-              <div className={`${styles.videoControls} ${showControls ? '' : styles.hidden}`}>
-                <div className={styles.videoControlsLeft}>
-                  <button 
-                    className={styles.controlButton}
-                    onClick={togglePlay}
-                    aria-label={isPlaying ? 'Pause' : 'Play'}
-                  >
-                    {isPlaying ? '⏸' : '▶'}
-                  </button>
-
-                  <div className={styles.volumeControls}>
-                    <button 
-                      className={styles.controlButton}
-                      onClick={toggleMute}
-                      aria-label={isMuted ? 'Unmute' : 'Mute'}
-                      style={{ minWidth: 'auto', padding: '0.5rem' }}
-                    >
-                      {isMuted || volume === 0 ? '🔇' : volume > 0.5 ? '🔊' : '🔉'}
-                    </button>
-                    <input
-                      type="range"
-                      className={styles.volumeSlider}
-                      min="0"
-                      max="1"
-                      step="0.1"
-                      value={volume}
-                      onChange={handleVolumeChange}
-                    />
-                  </div>
-
-                  <div className={styles.timeDisplay}>
-                    {formatTime(currentTime)} / {formatTime(duration)}
-                  </div>
-                </div>
-              </div>
             </>
           ) : (
             <div className={styles.videoPlayOverlay}>
@@ -243,11 +187,6 @@ export const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, videoDa
               </p>
             </div>
           )}
-        </div>
-
-        {/* Description */}
-        <div className={styles.videoModalDescription}>
-          <p>{videoData.description}</p>
         </div>
       </div>
     </div>
