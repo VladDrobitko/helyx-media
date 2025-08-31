@@ -242,6 +242,16 @@ function App() {
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  // Update page title based on current page
+  React.useEffect(() => {
+    const titles = {
+      home: 'HELYX Media | Professional Video Production',
+      portfolio: 'Portfolio | HELYX Media',
+      admin: 'Admin Panel | HELYX Media'
+    };
+    document.title = titles[currentPage];
+  }, [currentPage]);
+
   const handleVideoClick = useCallback((video: VideoItem) => {
     setSelectedVideo(video);
     setIsModalOpen(true);
