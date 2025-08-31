@@ -1,0 +1,170 @@
+/* src/components/MemoryDebugPanel/MemoryDebugPanel.module.css */
+
+.memoryButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  font-size: 12px;
+  z-index: 1001;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.memoryButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+.memoryNormal {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+}
+
+.memoryHigh {
+  background: linear-gradient(135deg, #ff4444, #cc0000);
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 6px 25px rgba(255, 68, 68, 0.5);
+  }
+  100% {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.memoryIcon {
+  font-size: 20px;
+}
+
+.memoryValue {
+  font-size: 10px;
+  font-weight: bold;
+  margin-top: -2px;
+}
+
+.memoryPanel {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.95);
+  color: white;
+  padding: 20px;
+  border-radius: 16px;
+  font-size: 12px;
+  z-index: 1000;
+  font-family: 'Inter', monospace;
+  min-width: 220px;
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.memoryHeader {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 14px;
+}
+
+.memoryStats {
+  margin-bottom: 15px;
+}
+
+.memoryStats div {
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.memoryStats div:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin: 2px -8px;
+}
+
+.cleanupButton {
+  margin-bottom: 15px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #ff4444, #cc0000);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 11px;
+  width: 100%;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.cleanupButton:hover {
+  background: linear-gradient(135deg, #ff6666, #ff4444);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+}
+
+.memoryStatus {
+  font-size: 10px;
+  opacity: 0.8;
+  text-align: center;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .memoryButton {
+    width: 50px;
+    height: 50px;
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .memoryIcon {
+    font-size: 16px;
+  }
+  
+  .memoryValue {
+    font-size: 9px;
+  }
+  
+  .memoryPanel {
+    bottom: 75px;
+    right: 15px;
+    min-width: 200px;
+    padding: 15px;
+  }
+}

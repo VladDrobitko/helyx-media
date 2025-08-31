@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        video {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border: 2px solid #333;
+        }
+        .info {
+            margin: 20px 0;
+            padding: 10px;
+            background: #333;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Test</h1>
+    
+    <div class="info">
+        <h3>Testing WebM Video</h3>
+        <p>File: /videos/test-video.webm</p>
+    </div>
+    
+    <video controls autoplay muted loop playsinline>
+        <source src="/videos/test-video.webm" type="video/webm">
+        <source src="/videos/test-video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <div class="info">
+        <h3>Video Information</h3>
+        <p>If you see a black screen, the video might not be loading properly.</p>
+        <p>Check the browser console for errors.</p>
+    </div>
+    
+    <script>
+        const video = document.querySelector('video');
+        
+        video.addEventListener('loadstart', () => {
+            console.log('Video loadstart');
+        });
+        
+        video.addEventListener('loadedmetadata', () => {
+            console.log('Video loadedmetadata');
+            console.log('Duration:', video.duration);
+            console.log('Video dimensions:', video.videoWidth, 'x', video.videoHeight);
+        });
+        
+        video.addEventListener('canplay', () => {
+            console.log('Video canplay');
+        });
+        
+        video.addEventListener('play', () => {
+            console.log('Video started playing');
+        });
+        
+        video.addEventListener('error', (e) => {
+            console.error('Video error:', e);
+            console.error('Error details:', video.error);
+        });
+    </script>
+</body>
+</html>

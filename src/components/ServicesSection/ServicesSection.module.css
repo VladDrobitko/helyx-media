@@ -1,0 +1,250 @@
+/* src/components/ServicesSection/ServicesSection.module.css */
+
+.pageSection {
+  min-height: 100vh;
+  padding: 5rem 2rem;
+  display: flex;
+  align-items: center;
+  scroll-margin-top: 100px;
+  background: #0a0a0a;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 3rem;
+  width: 100%;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.sectionHeader h1 {
+  font-size: 3rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.sectionHeader p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+  opacity: 0.7;
+}
+
+/* Services Accordion */
+.servicesContainer {
+  width: 100%;
+}
+
+.accordion {
+  border: none;
+}
+
+.accordionItem {
+  border: none;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.accordionItem.active {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 
+              0 8px 32px rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.accordionTrigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 2.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: none;
+  border: none;
+  width: 100%;
+}
+
+.accordionTrigger:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.accordionItem.active .accordionTrigger:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.accordionLeft {
+  flex: 1;
+  text-align: left;
+}
+
+.accordionService {
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.accordionItem.active .accordionService {
+  color: #a5b4fc;
+}
+
+.accordionBrief {
+  font-size: 1.05rem;
+  opacity: 0.7;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.accordionItem.active .accordionBrief {
+  opacity: 0.9;
+}
+
+.accordionToggle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.accordionToggle::before,
+.accordionToggle::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+.accordionToggle::after {
+  transform: rotate(90deg);
+}
+
+.accordionItem.active .accordionToggle {
+  background: rgba(99, 102, 241, 0.2);
+  transform: rotate(180deg);
+}
+
+.accordionItem.active .accordionToggle::before,
+.accordionItem.active .accordionToggle::after {
+  background: #ffffff;
+}
+
+.accordionItem.active .accordionToggle::after {
+  opacity: 0;
+}
+
+.accordionContent {
+  overflow: hidden;
+  max-height: 0;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accordionItem.active .accordionContent {
+  max-height: 600px;
+}
+
+.accordionInner {
+  padding: 0 2.5rem 2.5rem 2.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 1rem;
+  padding-top: 2rem;
+}
+
+.contentFeatures {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  opacity: 0.85;
+  padding: 0.5rem 0;
+  transition: all 0.2s ease;
+  color: var(--text-secondary);
+}
+
+.featureItem:hover {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+.featureItem::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: #ffffff;
+  border-radius: 50%;
+  margin-right: 1rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.contentDescription {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  opacity: 0.8;
+  color: var(--text-secondary);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .sectionHeader h1 {
+    font-size: 2.2rem;
+  }
+
+  .accordionInner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 0 1.5rem 2rem 1.5rem;
+  }
+  
+  .accordionTrigger {
+    padding: 1.5rem;
+  }
+  
+  .accordionService {
+    font-size: 1.3rem;
+  }
+  
+  .accordionBrief {
+    font-size: 1rem;
+  }
+
+  .pageSection {
+    padding: 3rem 1rem;
+    min-height: auto;
+  }
+}

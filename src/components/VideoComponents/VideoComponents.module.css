@@ -1,0 +1,120 @@
+/* src/components/VideoComponents/VideoComponents.module.css */
+
+.portfolioVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.videoThumbnail {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.videoThumbnail::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    rgba(99, 102, 241, 0.1), 
+    rgba(139, 92, 246, 0.1)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.videoThumbnail:hover {
+  transform: scale(1.02) translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.videoThumbnail:hover::before {
+  opacity: 1;
+}
+
+.playOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 2;
+  backdrop-filter: blur(2px);
+}
+
+.videoThumbnail:hover .playOverlay {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.playButton {
+  width: 70px;
+  height: 70px;
+  background: rgba(99, 102, 241, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  margin-left: 4px;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.playButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.3), 
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.videoThumbnail:hover .playButton {
+  transform: scale(1.15);
+  background: linear-gradient(135deg, 
+    rgba(99, 102, 241, 1), 
+    rgba(139, 92, 246, 1)
+  );
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+}
+
+.videoThumbnail:hover .playButton::before {
+  left: 100%;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .playButton {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+}
