@@ -47,11 +47,45 @@ function App() {
   // Update page title and favicon based on current page
   React.useEffect(() => {
     const titles = {
-      home: 'HELYX Media',
-      portfolio: 'Portfolio | HELYX Media',
+      home: 'HELYX Media - Professional Video Production Barcelona | Commercial & Brand Videos',
+      portfolio: 'Video Portfolio | HELYX Media - Commercial & Brand Videos Barcelona',
       admin: 'Admin Panel | HELYX Media'
     };
     document.title = titles[currentPage];
+
+    // Update meta description dynamically
+    const descriptions = {
+      home: 'Professional video production company in Barcelona. Cinematic commercials, brand videos, corporate content. Award-winning cinematography and post-production services in Spain.',
+      portfolio: 'Explore our video production portfolio. Commercial videos, brand campaigns, and corporate content created by HELYX Media in Barcelona, Spain.',
+      admin: 'HELYX Media Admin Panel'
+    };
+    
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', descriptions[currentPage]);
+    }
+
+    // Update Open Graph tags
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    
+    if (ogTitle) {
+      ogTitle.setAttribute('content', titles[currentPage]);
+    }
+    if (ogDescription) {
+      ogDescription.setAttribute('content', descriptions[currentPage]);
+    }
+
+    // Update Twitter tags
+    const twitterTitle = document.querySelector('meta[property="twitter:title"]');
+    const twitterDescription = document.querySelector('meta[property="twitter:description"]');
+    
+    if (twitterTitle) {
+      twitterTitle.setAttribute('content', titles[currentPage]);
+    }
+    if (twitterDescription) {
+      twitterDescription.setAttribute('content', descriptions[currentPage]);
+    }
 
     // Update favicon to use Supabase URL if available
     if (import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_URL !== 'https://demo.supabase.co') {
