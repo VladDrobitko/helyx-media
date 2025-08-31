@@ -83,10 +83,208 @@
   }
 }
 
+/* Hero Content Styles */
+.heroContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2;
+  color: white;
+}
+
+.heroTitle {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.highlight {
+  color: #6366f1;
+}
+
+.heroSubtitle {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.heroButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryButton,
+.secondaryButton {
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.primaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+}
+
+.secondaryButton {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.secondaryButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .heroVideo {
     transition: none;
+  }
+}
+
+/* Mobile Hero Alternative */
+.mobileHero {
+  display: none;
+  position: relative;
+  width: 100%;
+  min-height: 70vh;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+  padding: 4rem 1rem;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.mobileHeroContent {
+  max-width: 90%;
+  margin: 0 auto;
+  z-index: 2;
+  position: relative;
+}
+
+.mobileHeroTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.mobileHeroSubtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  font-weight: 300;
+}
+
+.mobileHeroCta {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.mobileHeroCta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+}
+
+.mobileHeroBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+  z-index: 1;
+}
+
+/* Mobile Media Queries */
+@media (max-width: 768px) {
+  .hero {
+    display: none;
+  }
+  
+  .mobileHero {
+    display: flex;
+  }
+}
+
+@media (max-width: 1024px) {
+  .heroTitle {
+    font-size: 3rem;
+  }
+  
+  .heroSubtitle {
+    font-size: 1.3rem;
+  }
+  
+  .heroButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .primaryButton,
+  .secondaryButton {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobileHeroTitle {
+    font-size: 2rem;
+  }
+  
+  .mobileHeroSubtitle {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .mobileHeroCta {
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
+  }
+  
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+  
+  .heroSubtitle {
+    font-size: 1.1rem;
   }
 }
 

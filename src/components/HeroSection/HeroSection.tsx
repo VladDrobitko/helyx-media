@@ -93,44 +93,96 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({ className }
     };
   }, [isLoaded, hasError]);
 
-  return (
-    <section 
-      id="hero" 
-      className={`${styles.hero} ${className || ''}`}
-    >
-      {/* Видео фон */}
-      <video
-        ref={videoRef}
-        className={styles.heroVideo}
-        autoPlay
-        muted
-        loop
-        playsInline
-        onLoadedMetadata={handleLoadedMetadata}
-        onError={handleVideoError}
-        onCanPlay={handleCanPlay}
-        onPlay={handlePlay}
-        poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2NjdlZWE7c3RvcC1vcGFjaXR5OjEiIC8+CjxzdG9wIG9mZnNldD0iNTAlIiBzdHlsZT0ic3RvcC1jb2xvcjojOGI1Y2Y2O3N0b3Atb3BhY2l0eToxIiAvPgo8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM3NjRiYTI7c3RvcC1vcGFjaXR5OjEiIC8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkaWVudCkiIC8+Cjwvc3ZnPg=="
-      >
-        <source src={getVideoUrl('heroBackground')} type="video/webm" />
-        Your browser does not support the video tag.
-      </video>
+  const scrollToContact = () => {
+    const contactElement = document.getElementById('contact');
+    if (contactElement) {
+      contactElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
-      {/* Отображение ошибки если видео не загрузилось */}
-      {hasError && (
-        <div className={styles.videoError}>
-          <p>Video background unavailable</p>
-          <p>Error loading video files</p>
+  const scrollToPortfolio = () => {
+    const portfolioElement = document.getElementById('portfolio');
+    if (portfolioElement) {
+      portfolioElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <>
+      {/* Desktop Hero with Video */}
+      <section 
+        id="hero" 
+        className={`${styles.hero} ${className || ''}`}
+      >
+        {/* Видео фон */}
+        <video
+          ref={videoRef}
+          className={styles.heroVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          onLoadedMetadata={handleLoadedMetadata}
+          onError={handleVideoError}
+          onCanPlay={handleCanPlay}
+          onPlay={handlePlay}
+          poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2NjdlZWE7c3RvcC1vcGFjaXR5OjEiIC8+CjxzdG9wIG9mZnNldD0iNTAlIiBzdHlsZT0ic3RvcC1jb2xvcjojOGI1Y2Y2O3N0b3Atb3BhY2l0eToxIiAvPgo8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM3NjRiYTI7c3RvcC1vcGFjaXR5OjEiIC8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkaWVudCkiIC8+Cjwvc3ZnPg=="
+        >
+          <source src={getVideoUrl('heroBackground')} type="video/webm" />
+          Your browser does not support the video tag.
+        </video>
+
+        {/* Отображение ошибки если видео не загрузилось */}
+        {hasError && (
+          <div className={styles.videoError}>
+            <p>Video background unavailable</p>
+            <p>Error loading video files</p>
+          </div>
+        )}
+        
+        {/* Индикатор загрузки */}
+        {!isLoaded && !hasError && (
+          <div className={styles.videoLoading}>
+            <div className={styles.loadingSpinner} />
+            <p>Loading video...</p>
+          </div>
+        )}
+
+        {/* Hero Content for Desktop */}
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>
+            HELYX<span className={styles.highlight}>MEDIA</span>
+          </h1>
+          <p className={styles.heroSubtitle}>
+            Transform Your Vision Into Cinematic Reality
+          </p>
+          <div className={styles.heroButtons}>
+            <button onClick={scrollToPortfolio} className={styles.primaryButton}>
+              View Our Work
+            </button>
+            <button onClick={scrollToContact} className={styles.secondaryButton}>
+              Start Your Project
+            </button>
+          </div>
         </div>
-      )}
-      
-      {/* Индикатор загрузки */}
-      {!isLoaded && !hasError && (
-        <div className={styles.videoLoading}>
-          <div className={styles.loadingSpinner} />
-          <p>Loading video...</p>
+      </section>
+
+      {/* Mobile Hero Alternative */}
+      <section className={styles.mobileHero}>
+        <div className={styles.mobileHeroBackground} />
+        <div className={styles.mobileHeroContent}>
+          <h1 className={styles.mobileHeroTitle}>
+            HELYX MEDIA
+          </h1>
+          <p className={styles.mobileHeroSubtitle}>
+            Professional Video Production<br />
+            Transform Your Vision Into Reality
+          </p>
+          <button onClick={scrollToPortfolio} className={styles.mobileHeroCta}>
+            View Our Work
+          </button>
         </div>
-      )}
-    </section>
+      </section>
+    </>
   );
 });
