@@ -70,7 +70,6 @@ export const Footer: React.FC = () => {
           <div className={styles.footerSection}>
             <h4 className={styles.sectionTitle}>Contact</h4>
             <div className={styles.contactInfo}>
-              <p>hello@helyx-media.com</p>
               <p>+34 661 181 094</p>
               <p>Barcelona, Spain</p>
             </div>
