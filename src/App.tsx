@@ -8,6 +8,7 @@ import { Footer } from '@/components/Footer';
 import { ContactForm } from '@/components/ContactForm';
 import { PortfolioPage } from '@/pages/PortfolioPage';
 import { AdminPage } from '@/pages/AdminPage';
+import { getVideoUrl, getThumbnailUrl } from '@/utils/supabaseUrls';
 import type { PageType, VideoItem } from '@/types';
 import './App.css';
 
@@ -38,8 +39,8 @@ const PortfolioSection: React.FC<{
       title: 'Ваш проект 1',
       description: 'Описание вашего первого проекта.',
       gradient: 'linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
-      videoUrl: '/videos/portfolio/video1.webm',
-      thumbnailUrl: '/images/portfolio/video1-poster.jpeg',  // Добавьте ваше превью
+      videoUrl: getVideoUrl('portfolioVideo1'),
+      thumbnailUrl: getThumbnailUrl('video1Poster'),
       duration: '2:30',
       year: '2024',
       client: 'Ваш клиент',
@@ -51,8 +52,8 @@ const PortfolioSection: React.FC<{
       title: 'Ваш проект 2',
       description: 'Описание вашего второго проекта.',
       gradient: 'linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
-      videoUrl: '/videos/portfolio/hero-background.webm',
-      thumbnailUrl: '/images/portfolio/hero-background-poster.jpeg',  // Добавьте ваше превью
+      videoUrl: getVideoUrl('portfolioHeroBackground'),
+      thumbnailUrl: getThumbnailUrl('heroBackgroundPoster'),
       duration: '1:45',
       year: '2024',
       client: 'Ваш клиент',
@@ -64,8 +65,8 @@ const PortfolioSection: React.FC<{
       title: 'Ваш проект 3',
       description: 'Описание вашего третьего проекта.',
       gradient: 'linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
-      videoUrl: '/videos/portfolio/video2.webm',
-      thumbnailUrl: '/images/portfolio/video2-poster.jpeg',  // Добавьте ваше превью
+      videoUrl: getVideoUrl('portfolioVideo2'),
+      thumbnailUrl: getThumbnailUrl('video2Poster'),
       duration: '3:15',
       year: '2023',
       client: 'Ваш клиент',

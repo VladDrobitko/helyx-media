@@ -1,5 +1,6 @@
 // src/components/HeroSection/HeroSection.tsx
 import React, { useRef, useEffect, useState } from 'react';
+import { getVideoUrl } from '@/utils/supabaseUrls';
 import styles from './HeroSection.module.css';
 
 interface HeroSectionProps {
@@ -110,7 +111,7 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({ className }
         onPlay={handlePlay}
         poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2NjdlZWE7c3RvcC1vcGFjaXR5OjEiIC8+CjxzdG9wIG9mZnNldD0iNTAlIiBzdHlsZT0ic3RvcC1jb2xvcjojOGI1Y2Y2O3N0b3Atb3BhY2l0eToxIiAvPgo8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM3NjRiYTI7c3RvcC1vcGFjaXR5OjEiIC8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkaWVudCkiIC8+Cjwvc3ZnPg=="
       >
-        <source src="/videos/hero-background.webm" type="video/webm" />
+        <source src={getVideoUrl('heroBackground')} type="video/webm" />
         Your browser does not support the video tag.
       </video>
 
