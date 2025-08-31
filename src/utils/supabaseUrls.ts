@@ -29,6 +29,14 @@ export const THUMBNAIL_URLS = {
 // Favicon URL
 export const FAVICON_URL = getSupabaseFileUrl('thumbnails', 'favicon.ico');
 
+// Get favicon URL with fallback
+export const getFaviconUrl = (): string => {
+  if (!import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL === 'https://demo.supabase.co') {
+    return '/favicon.ico';
+  }
+  return FAVICON_URL;
+};
+
 // Fallback to local files if Supabase is not configured
 export const getVideoUrl = (videoKey: keyof typeof VIDEO_URLS): string => {
   if (!import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL === 'https://demo.supabase.co') {

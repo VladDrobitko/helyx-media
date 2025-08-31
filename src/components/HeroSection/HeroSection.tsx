@@ -1,6 +1,6 @@
 // src/components/HeroSection/HeroSection.tsx
 import React, { useRef, useEffect, useState } from 'react';
-import { getVideoUrl } from '@/utils/supabaseUrls';
+import { getVideoUrl, getFaviconUrl } from '@/utils/supabaseUrls';
 import styles from './HeroSection.module.css';
 
 interface HeroSectionProps {
@@ -148,32 +148,18 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({ className }
           </div>
         )}
 
-        {/* Hero Content for Desktop */}
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
-            HELYX<span className={styles.highlight}>MEDIA</span>
-          </h1>
-          <p className={styles.heroSubtitle}>
-            Transform Your Vision Into Cinematic Reality
-          </p>
-          <div className={styles.heroButtons}>
-            <button onClick={scrollToPortfolio} className={styles.primaryButton}>
-              View Our Work
-            </button>
-            <button onClick={scrollToContact} className={styles.secondaryButton}>
-              Start Your Project
-            </button>
-          </div>
-        </div>
+
       </section>
 
       {/* Mobile Hero Alternative */}
       <section className={styles.mobileHero}>
         <div className={styles.mobileHeroBackground} />
         <div className={styles.mobileHeroContent}>
-          <h1 className={styles.mobileHeroTitle}>
-            HELYX MEDIA
-          </h1>
+          <img 
+            src={getFaviconUrl()} 
+            alt="HELYX Media Logo" 
+            className={styles.mobileHeroLogo}
+          />
           <p className={styles.mobileHeroSubtitle}>
             Professional Video Production<br />
             Transform Your Vision Into Reality
