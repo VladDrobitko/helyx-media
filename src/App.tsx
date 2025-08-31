@@ -245,7 +245,7 @@ function App() {
   // Update page title based on current page
   React.useEffect(() => {
     const titles = {
-      home: 'HELYX Media | Professional Video Production',
+      home: 'HELYX Media',
       portfolio: 'Portfolio | HELYX Media',
       admin: 'Admin Panel | HELYX Media'
     };
