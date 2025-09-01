@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!api|sitemap\\.xml|robots\\.txt|favicon\\.ico|google.*\\.html).*)",
+      "source": "/((?!api/|sitemap\\.xml$|sitemap\\.txt$|robots\\.txt$|favicon\\.ico$|google.*\\.html$).*)",
       "destination": "/index.html"
     }
   ],
@@ -17,6 +17,15 @@
     },
     {
       "source": "/robots.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain"
+        }
+      ]
+    },
+    {
+      "source": "/sitemap.txt",
       "headers": [
         {
           "key": "Content-Type",
