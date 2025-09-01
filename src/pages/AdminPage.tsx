@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import type { PageType } from '@/types';
 import { PortfolioService, type PortfolioVideo } from '@/services/portfolioService';
 import { ContactService, type ContactSubmission } from '@/services/contactService';
+import { AddVideoModal } from '@/components/AddVideoModal';
 import styles from './AdminPage.module.css';
 
 interface AdminPageProps {
@@ -15,6 +16,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ setCurrentPage }) => {
   const [videos, setVideos] = useState<PortfolioVideo[]>([]);
   const [contacts, setContacts] = useState<ContactSubmission[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAddVideoModalOpen, setIsAddVideoModalOpen] = useState(false);
 
   // Check if already authenticated
   useEffect(() => {
@@ -96,6 +98,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({ setCurrentPage }) => {
     }
   };
 
+  const handleVideoAdded = (newVideo: PortfolioVideo) => {
+    setVideos(prev => [newVideo, ...prev]);
+    setIsAddVideoModalOpen(false);
+  };
+
   // Show login form if not authenticated
   if (!isAuthenticated) {
     return <LoginForm onLogin={() => setIsAuthenticated(true)} setCurrentPage={setCurrentPage} />;
@@ -151,6 +158,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ setCurrentPage }) => {
             onDelete={handleDeleteVideo}
             onTogglePublished={handleTogglePublished}
             onToggleFeatured={handleToggleFeatured}
+            onAddVideo={() => setIsAddVideoModalOpen(true)}
           />
         ) : (
           <ContactsTab 
@@ -160,6 +168,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ setCurrentPage }) => {
           />
         )}
       </div>
+
+      {/* Add Video Modal */}
+      <AddVideoModal
+        isOpen={isAddVideoModalOpen}
+        onClose={() => setIsAddVideoModalOpen(false)}
+        onVideoAdded={handleVideoAdded}
+      />
     </div>
   );
 };
@@ -170,11 +185,15 @@ const VideosTab: React.FC<{
   onDelete: (id: string) => void;
   onTogglePublished: (id: string, current: boolean) => void;
   onToggleFeatured: (id: string, current: boolean) => void;
-}> = ({ videos, onDelete, onTogglePublished, onToggleFeatured }) => {
+  onAddVideo: () => void;
+}> = ({ videos, onDelete, onTogglePublished, onToggleFeatured, onAddVideo }) => {
   return (
     <div className={styles.videosTab}>
       <div className={styles.addVideoButton}>
-        <button className={styles.primaryButton}>
+        <button 
+          className={styles.primaryButton}
+          onClick={onAddVideo}
+        >
           + Add New Video
         </button>
       </div>
@@ -368,8 +387,7 @@ const LoginForm: React.FC<{
           </form>
           
           <div className={styles.loginHint}>
-            <p>Default password: admin123</p>
-            <p>Set VITE_ADMIN_PASSWORD in environment variables</p>
+            <p>Use admin password to access the panel</p>
           </div>
         </div>
       </div>

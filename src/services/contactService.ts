@@ -38,8 +38,37 @@ export class ContactService {
   static async getAllSubmissions(): Promise<ContactSubmission[]> {
     try {
       if (!supabase) {
-        console.warn('Supabase not configured');
-        return [];
+        console.warn('Supabase not configured, using demo data');
+        // Demo data for development
+        return [
+          {
+            id: 'contact-demo-1',
+            name: 'John Smith',
+            email: 'john@example.com',
+            company: 'Creative Agency',
+            message: 'Hi! We are interested in your video production services for our upcoming marketing campaign. Could you please send us more information about pricing and availability?',
+            is_read: false,
+            created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() // 2 days ago
+          },
+          {
+            id: 'contact-demo-2',
+            name: 'Maria Rodriguez',
+            email: 'maria@techcorp.com',
+            company: 'TechCorp',
+            message: 'We need a product showcase video for our new app launch. Can we schedule a call to discuss the project details and timeline?',
+            is_read: true,
+            created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days ago
+          },
+          {
+            id: 'contact-demo-3',
+            name: 'Alex Chen',
+            email: 'alex.chen@startup.io',
+            company: 'StartupIO',
+            message: 'Looking for a creative team to help with our brand story video. Your portfolio looks amazing! What is your typical project timeline?',
+            is_read: false,
+            created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() // 1 day ago
+          }
+        ];
       }
 
       const { data, error } = await supabase
@@ -58,8 +87,8 @@ export class ContactService {
   static async markAsRead(id: string): Promise<boolean> {
     try {
       if (!supabase) {
-        console.warn('Supabase not configured');
-        return false;
+        console.warn('Supabase not configured, simulating mark as read');
+        return true;
       }
 
       const { error } = await supabase
@@ -78,8 +107,8 @@ export class ContactService {
   static async deleteSubmission(id: string): Promise<boolean> {
     try {
       if (!supabase) {
-        console.warn('Supabase not configured');
-        return false;
+        console.warn('Supabase not configured, simulating delete');
+        return true;
       }
 
       const { error } = await supabase

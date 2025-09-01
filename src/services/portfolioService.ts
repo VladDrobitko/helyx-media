@@ -75,8 +75,58 @@ export class PortfolioService {
   static async getAllVideos(): Promise<PortfolioVideo[]> {
     try {
       if (!supabase) {
-        console.warn('Supabase not configured');
-        return [];
+        console.warn('Supabase not configured, using demo data');
+        // Demo data for development
+        return [
+          {
+            id: 'demo-1',
+            title: 'Demo Commercial Video',
+            description: 'A showcase of premium commercial videography',
+            category: 'Commercial',
+            client: 'Demo Client',
+            year: 2024,
+            video_url: '/videos/heroBackground.mp4',
+            thumbnail_url: '/images/portfolio1.jpg',
+            format: 'horizontal' as const,
+            is_published: true,
+            is_featured: true,
+            order_index: 1,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          },
+          {
+            id: 'demo-2',
+            title: 'Brand Story Video',
+            description: 'Creative storytelling for modern brands',
+            category: 'Brand',
+            client: 'Creative Agency',
+            year: 2024,
+            video_url: '/videos/heroBackground.mp4',
+            thumbnail_url: '/images/portfolio2.jpg',
+            format: 'vertical' as const,
+            is_published: true,
+            is_featured: false,
+            order_index: 2,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          },
+          {
+            id: 'demo-3',
+            title: 'Product Showcase',
+            description: 'Professional product videography',
+            category: 'Product',
+            client: 'Tech Company',
+            year: 2024,
+            video_url: '/videos/heroBackground.mp4',
+            thumbnail_url: '/images/portfolio3.jpg',
+            format: 'square' as const,
+            is_published: false,
+            is_featured: false,
+            order_index: 3,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        ];
       }
 
       const { data, error } = await supabase
@@ -113,11 +163,12 @@ export class PortfolioService {
     }
   }
 
-  static async updateVideo(id: string, updates: Partial<PortfolioVideo>): Promise<PortfolioVideo | null> {
+  static async updateVideo(id: string, updates: Partial<PortfolioVideo>): Promise<boolean> {
     try {
       if (!supabase) {
-        console.warn('Supabase not configured');
-        return null;
+        console.warn('Supabase not configured, simulating update');
+        // In demo mode, just return success
+        return true;
       }
 
       const { data, error } = await supabase
@@ -128,18 +179,18 @@ export class PortfolioService {
         .single();
 
       if (error) throw error;
-      return data;
+      return true;
     } catch (error) {
       console.error('Error updating video:', error);
-      return null;
+      return false;
     }
   }
 
   static async deleteVideo(id: string): Promise<boolean> {
     try {
       if (!supabase) {
-        console.warn('Supabase not configured');
-        return false;
+        console.warn('Supabase not configured, simulating delete');
+        return true;
       }
 
       const { error } = await supabase
