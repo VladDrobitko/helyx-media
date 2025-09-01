@@ -1,0 +1,44 @@
+User-agent: *
+Allow: /
+Allow: /portfolio
+Allow: /sitemap.xml
+
+# Sitemap
+Sitemap: https://helyx-media.vercel.app/sitemap.xml
+
+# Crawl-delay for bots
+Crawl-delay: 1
+
+# Disallow admin and private areas
+Disallow: /admin
+Disallow: /*.json$
+Disallow: /*.txt$
+Disallow: /api/
+
+# Allow common SEO bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
