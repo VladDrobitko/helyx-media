@@ -40,9 +40,27 @@ const ContactSection: React.FC = () => {
 
 // Main App Component
 function App() {
-  const [currentPage, setCurrentPage] = useState<PageType>('home');
+  // Initialize page based on URL
+  const getInitialPage = (): PageType => {
+    const path = window.location.pathname;
+    if (path === '/portfolio') return 'portfolio';
+    if (path === '/admin') return 'admin';
+    return 'home';
+  };
+
+  const [currentPage, setCurrentPage] = useState<PageType>(getInitialPage());
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  // Handle browser back/forward buttons
+  React.useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPage(getInitialPage());
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Update page title and favicon based on current page
   React.useEffect(() => {

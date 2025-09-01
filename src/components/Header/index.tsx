@@ -45,6 +45,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) =
   const scrollToSection = useCallback((sectionId: string) => {
     if (currentPage !== 'home') {
       setCurrentPage('home');
+      window.history.pushState({}, '', '/');
       setTimeout(() => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -71,7 +72,14 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) =
   }, [currentPage, setCurrentPage]);
 
   const navigateToPage = useCallback((page: PageType) => {
+    const paths = {
+      home: '/',
+      portfolio: '/portfolio',
+      admin: '/admin'
+    };
+    
     setCurrentPage(page);
+    window.history.pushState({}, '', paths[page]);
     setIsMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [setCurrentPage]);

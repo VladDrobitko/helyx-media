@@ -10,14 +10,25 @@ interface AdminPageProps {
 }
 
 export const AdminPage: React.FC<AdminPageProps> = ({ setCurrentPage }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState<'videos' | 'contacts'>('videos');
   const [videos, setVideos] = useState<PortfolioVideo[]>([]);
   const [contacts, setContacts] = useState<ContactSubmission[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Check if already authenticated
   useEffect(() => {
-    loadData();
-  }, [activeTab]);
+    const auth = sessionStorage.getItem('admin_auth');
+    if (auth === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadData();
+    }
+  }, [activeTab, isAuthenticated]);
 
   const loadData = async () => {
     setLoading(true);
@@ -85,6 +96,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({ setCurrentPage }) => {
     }
   };
 
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
+    return <LoginForm onLogin={() => setIsAuthenticated(true)} setCurrentPage={setCurrentPage} />;
+  }
+
   return (
     <div className={styles.adminContainer}>
       {/* Header */}
@@ -97,6 +113,15 @@ export const AdminPage: React.FC<AdminPageProps> = ({ setCurrentPage }) => {
             ← Back to Site
           </button>
           <h1 className={styles.title}>Admin Panel</h1>
+          <button
+            onClick={() => {
+              sessionStorage.removeItem('admin_auth');
+              setIsAuthenticated(false);
+            }}
+            className={styles.logoutButton}
+          >
+            Logout
+          </button>
         </div>
       </div>
 
@@ -277,6 +302,77 @@ const ContactsTab: React.FC<{
           ))}
         </div>
       )}
+    </div>
+  );
+};
+
+// Login Form Component
+const LoginForm: React.FC<{
+  onLogin: () => void;
+  setCurrentPage: (page: PageType) => void;
+}> = ({ onLogin, setCurrentPage }) => {
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Simple password check - in production, use proper authentication
+    const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
+    
+    if (password === adminPassword) {
+      sessionStorage.setItem('admin_auth', 'true');
+      onLogin();
+      setError('');
+    } else {
+      setError('Incorrect password');
+    }
+  };
+
+  return (
+    <div className={styles.adminContainer}>
+      <div className={styles.loginContainer}>
+        <div className={styles.loginForm}>
+          <button
+            onClick={() => setCurrentPage('home')}
+            className={styles.backButton}
+          >
+            ← Back to Site
+          </button>
+          
+          <h1 className={styles.loginTitle}>Admin Access</h1>
+          
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.inputGroup}>
+              <label htmlFor="password" className={styles.label}>
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={styles.input}
+                placeholder="Enter admin password"
+                required
+              />
+            </div>
+            
+            {error && (
+              <div className={styles.error}>{error}</div>
+            )}
+            
+            <button type="submit" className={styles.loginButton}>
+              Login
+            </button>
+          </form>
+          
+          <div className={styles.loginHint}>
+            <p>Default password: admin123</p>
+            <p>Set VITE_ADMIN_PASSWORD in environment variables</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
