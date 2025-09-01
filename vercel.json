@@ -1,7 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/((?!api/|sitemap\\.xml$|sitemap\\.txt$|robots\\.txt$|favicon\\.ico$|google.*\\.html$).*)",
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap.xml"
+    },
+    {
+      "source": "/((?!api/|sitemap\\.txt$|robots\\.txt$|favicon\\.ico$|google.*\\.html$).*)",
       "destination": "/index.html"
     }
   ],
