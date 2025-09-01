@@ -1,6 +1,7 @@
 // src/components/AddVideoModal/index.tsx
 import React, { useState } from 'react';
 import { PortfolioService, type PortfolioVideo } from '@/services/portfolioService';
+import { supabase } from '@/lib/supabase';
 import styles from './AddVideoModal.module.css';
 
 interface AddVideoModalProps {
@@ -24,34 +25,90 @@ export const AddVideoModal: React.FC<AddVideoModalProps> = ({
     is_published: false,
     is_featured: false
   });
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setUploadProgress(0);
 
     try {
-      // In demo mode, create a demo video
-      const newVideo: PortfolioVideo = {
-        id: `demo-${Date.now()}`,
+      let videoUrl = '/videos/heroBackground.mp4'; // fallback
+      let thumbnailUrl = '/images/portfolio1.jpg'; // fallback
+
+      // If Supabase is configured and files are provided, upload them
+      if (supabase && (videoFile || thumbnailFile)) {
+        // Upload video file
+        if (videoFile) {
+          setUploadProgress(25);
+          const videoFileName = `video-${Date.now()}-${videoFile.name}`;
+          const { data: videoData, error: videoError } = await supabase.storage
+            .from('videos')
+            .upload(videoFileName, videoFile, {
+              cacheControl: '3600',
+              upsert: false
+            });
+
+          if (videoError) throw videoError;
+          
+          const { data: { publicUrl: videoPublicUrl } } = supabase.storage
+            .from('videos')
+            .getPublicUrl(videoFileName);
+          
+          videoUrl = videoPublicUrl;
+          setUploadProgress(50);
+        }
+
+        // Upload thumbnail file
+        if (thumbnailFile) {
+          setUploadProgress(75);
+          const thumbnailFileName = `thumb-${Date.now()}-${thumbnailFile.name}`;
+          const { data: thumbnailData, error: thumbnailError } = await supabase.storage
+            .from('thumbnails')
+            .upload(thumbnailFileName, thumbnailFile, {
+              cacheControl: '3600',
+              upsert: false
+            });
+
+          if (thumbnailError) throw thumbnailError;
+          
+          const { data: { publicUrl: thumbnailPublicUrl } } = supabase.storage
+            .from('thumbnails')
+            .getPublicUrl(thumbnailFileName);
+          
+          thumbnailUrl = thumbnailPublicUrl;
+        }
+      }
+
+      setUploadProgress(90);
+
+      // Create video record in database
+      const videoData: Omit<PortfolioVideo, 'id' | 'created_at' | 'updated_at'> = {
         ...formData,
-        video_url: '/videos/heroBackground.mp4',
-        thumbnail_url: '/images/portfolio1.jpg',
-        order_index: Date.now(),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        video_url: videoUrl,
+        thumbnail_url: thumbnailUrl,
+        order_index: Date.now()
       };
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const newVideo = await PortfolioService.createVideo(videoData);
       
+      if (!newVideo) {
+        throw new Error('Failed to create video record');
+      }
+
+      setUploadProgress(100);
       onVideoAdded(newVideo);
       onClose();
       resetForm();
     } catch (error) {
       console.error('Error adding video:', error);
+      alert('Error uploading video: ' + (error as Error).message);
     } finally {
       setIsLoading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -66,6 +123,9 @@ export const AddVideoModal: React.FC<AddVideoModalProps> = ({
       is_published: false,
       is_featured: false
     });
+    setVideoFile(null);
+    setThumbnailFile(null);
+    setUploadProgress(0);
   };
 
   const handleClose = () => {
@@ -181,6 +241,47 @@ export const AddVideoModal: React.FC<AddVideoModalProps> = ({
             </div>
           </div>
 
+          {/* File Upload Section */}
+          <div className={styles.fileUploadSection}>
+            <h3 className={styles.sectionTitle}>Media Files</h3>
+            
+            <div className={styles.inputGroup}>
+              <label htmlFor="videoFile" className={styles.label}>
+                Video File {supabase ? '*' : '(Optional in demo mode)'}
+              </label>
+              <input
+                type="file"
+                id="videoFile"
+                accept="video/mp4,video/webm,video/mov"
+                onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
+                className={styles.fileInput}
+              />
+              {videoFile && (
+                <div className={styles.fileInfo}>
+                  Selected: {videoFile.name} ({(videoFile.size / 1024 / 1024).toFixed(1)} MB)
+                </div>
+              )}
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label htmlFor="thumbnailFile" className={styles.label}>
+                Thumbnail Image {supabase ? '*' : '(Optional in demo mode)'}
+              </label>
+              <input
+                type="file"
+                id="thumbnailFile"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                onChange={(e) => setThumbnailFile(e.target.files?.[0] || null)}
+                className={styles.fileInput}
+              />
+              {thumbnailFile && (
+                <div className={styles.fileInfo}>
+                  Selected: {thumbnailFile.name} ({(thumbnailFile.size / 1024 / 1024).toFixed(1)} MB)
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className={styles.checkboxGroup}>
             <label className={styles.checkboxLabel}>
               <input
@@ -203,8 +304,25 @@ export const AddVideoModal: React.FC<AddVideoModalProps> = ({
             </label>
           </div>
 
+          {uploadProgress > 0 && (
+            <div className={styles.progressSection}>
+              <div className={styles.progressLabel}>Uploading... {uploadProgress}%</div>
+              <div className={styles.progressBar}>
+                <div 
+                  className={styles.progressFill} 
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+            </div>
+          )}
+
           <div className={styles.note}>
-            <p>Note: In demo mode, videos will use placeholder content. Connect Supabase to upload actual files.</p>
+            <p>
+              {supabase 
+                ? "Upload video and thumbnail files to create your portfolio entry." 
+                : "Note: In demo mode, videos will use placeholder content. Connect Supabase to upload actual files."
+              }
+            </p>
           </div>
 
           <div className={styles.actions}>
@@ -219,9 +337,16 @@ export const AddVideoModal: React.FC<AddVideoModalProps> = ({
             <button
               type="submit"
               className={styles.submitButton}
-              disabled={isLoading || !formData.title || !formData.category || !formData.client}
+              disabled={
+                isLoading || 
+                !formData.title || 
+                !formData.category || 
+                !formData.client ||
+                (supabase && !videoFile) ||
+                (supabase && !thumbnailFile)
+              }
             >
-              {isLoading ? 'Adding...' : 'Add Video'}
+              {isLoading ? (uploadProgress > 0 ? `Uploading... ${uploadProgress}%` : 'Processing...') : 'Add Video'}
             </button>
           </div>
         </form>

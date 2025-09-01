@@ -145,8 +145,14 @@ export class PortfolioService {
   static async createVideo(video: Omit<PortfolioVideo, 'id' | 'created_at' | 'updated_at'>): Promise<PortfolioVideo | null> {
     try {
       if (!supabase) {
-        console.warn('Supabase not configured');
-        return null;
+        console.warn('Supabase not configured, creating demo video');
+        // In demo mode, return a mock video with the provided data
+        return {
+          id: `demo-${Date.now()}`,
+          ...video,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
       }
 
       const { data, error } = await supabase
