@@ -17,37 +17,6 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
   const [portfolioItems, setPortfolioItems] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadPortfolioData = async () => {
-      try {
-        const videos = await PortfolioService.getPublishedVideos();
-        // Преобразуем данные из Supabase в формат VideoItem
-        const videoItems: VideoItem[] = videos.map(video => ({
-          id: video.id,
-          category: video.category,
-          title: video.title,
-          description: video.description,
-          gradient: 'linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
-          videoUrl: video.video_url,
-          thumbnailUrl: video.thumbnail_url,
-          duration: video.duration,
-          year: video.year,
-          client: video.client,
-          format: video.format
-        }));
-        setPortfolioItems(videoItems);
-      } catch (error) {
-        console.error('Error loading portfolio:', error);
-        // Fallback к статическим данным если БД недоступна
-        setPortfolioItems(fallbackPortfolioItems);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadPortfolioData();
-  }, []);
-
   // Fallback статические данные для разработки
   const fallbackPortfolioItems: VideoItem[] = [
     {
@@ -130,12 +99,48 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
     }
   ];
 
+  useEffect(() => {
+    const loadPortfolioData = async () => {
+      try {
+        const videos = await PortfolioService.getPublishedVideos();
+        
+        if (videos && videos.length > 0) {
+          // Преобразуем данные из Supabase в формат VideoItem
+          const videoItems: VideoItem[] = videos.map(video => ({
+            id: video.id,
+            category: video.category,
+            title: video.title,
+            description: video.description,
+            gradient: 'linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
+            videoUrl: video.video_url,
+            thumbnailUrl: video.thumbnail_url,
+            duration: video.duration || '0:00',
+            year: video.year.toString(),
+            client: video.client,
+            format: video.format
+          }));
+          setPortfolioItems(videoItems);
+        } else {
+          // Если нет данных из БД, используем fallback
+          setPortfolioItems(fallbackPortfolioItems);
+        }
+      } catch (error) {
+        console.error('Error loading portfolio:', error);
+        // Fallback к статическим данным если БД недоступна
+        setPortfolioItems(fallbackPortfolioItems);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPortfolioData();
+  }, []);
+
   // Функция для получения grid стилей с учетом формата видео
-  const getGridStyles = (index: number, format: string, totalVideos: number) => {
+  const getGridStyles = (index: number, format: string) => {
     // Динамическое размещение с учетом формата
     const isHorizontal = format === 'horizontal';
     const isVertical = format === 'vertical';
-    const isSquare = format === 'square';
     
     // Базовая логика: 3 видео в ряд
     const row = Math.floor(index / 3);
@@ -166,7 +171,7 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
       minHeight: '100vh', 
       background: '#0a0a0a',
       color: 'white',
-      paddingTop: '100px' // Отступ для фиксированного хедера
+      paddingTop: '100px'
     }}>
       {/* Header с кнопкой "Назад" */}
       <div style={{ 
@@ -269,48 +274,73 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
           </div>
         ) : (
           <div className={styles.portfolioGrid}>
-          {portfolioItems.map((item, index) => {
-            const gridStyles = getGridStyles(index, item.format, portfolioItems.length);
-            
-            return (
-              <div key={item.id} className={styles.portfolioItem} style={gridStyles}>
-                {/* Video Container */}
-                <div
-                  className={styles.videoContainer}
-                  onClick={() => onVideoClick(item)}
-                >
-                  {/* Video Player */}
-                  <video
-                    className={styles.video}
-                    src={item.videoUrl}
-                    poster={item.thumbnailUrl}
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                  />
-                  
-                  {/* Play Button Overlay */}
-                  <div className={styles.playOverlay}>
-                    <div className={styles.playIcon} />
-                  </div>
+            {portfolioItems.map((item, index) => {
+              const gridStyles = getGridStyles(index, item.format);
+              
+              return (
+                <div key={item.id} className={styles.portfolioItem} style={gridStyles}>
+                  {/* Video Container */}
+                  <div
+                    className={styles.videoContainer}
+                    onClick={() => onVideoClick(item)}
+                    onMouseEnter={(e) => {
+                      const video = e.currentTarget.querySelector('video');
+                      if (video && video.paused) {
+                        video.play().catch(err => console.log('Play prevented:', err));
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      const video = e.currentTarget.querySelector('video');
+                      if (video && !video.paused) {
+                        video.pause();
+                        video.currentTime = 0;
+                      }
+                    }}
+                  >
+                    {/* Video Player */}
+                    <video
+                      className={styles.video}
+                      src={item.videoUrl}
+                      poster={item.thumbnailUrl}
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      onError={(e) => {
+                        console.error('Video load error:', item.title, e);
+                        // Скрываем видео и показываем постер как background
+                        const video = e.currentTarget;
+                        video.style.display = 'none';
+                        const container = video.parentElement;
+                        if (container) {
+                          container.style.backgroundImage = `url(${item.thumbnailUrl})`;
+                          container.style.backgroundSize = 'cover';
+                          container.style.backgroundPosition = 'center';
+                        }
+                      }}
+                    />
+                    
+                    {/* Play Button Overlay */}
+                    <div className={styles.playOverlay}>
+                      <div className={styles.playIcon} />
+                    </div>
 
-                  {/* Video Info Overlay */}
-                  <div className={styles.infoOverlay}>
-                    <p className={styles.infoCategory}>
-                      {item.category} • {item.year}
-                    </p>
-                    <h3 className={styles.infoTitle}>
-                      {item.title}
-                    </h3>
-                    <p className={styles.infoMeta}>
-                      {item.duration} • {item.client}
-                    </p>
+                    {/* Video Info Overlay */}
+                    <div className={styles.infoOverlay}>
+                      <p className={styles.infoCategory}>
+                        {item.category} • {item.year}
+                      </p>
+                      <h3 className={styles.infoTitle}>
+                        {item.title}
+                      </h3>
+                      <p className={styles.infoMeta}>
+                        {item.duration} • {item.client}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
           </div>
         )}
       </div>
