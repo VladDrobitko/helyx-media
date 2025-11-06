@@ -22,12 +22,15 @@
   overflow: hidden;
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  background-size: cover;
+  background-position: center;
 }
 
 .videoContainer:hover {
   transform: scale(1.02);
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .videoContainer:hover .playOverlay,
@@ -40,6 +43,7 @@
   height: 100%;
   object-fit: cover;
   border-radius: 12px;
+  display: block;
 }
 
 .playOverlay {
@@ -47,25 +51,31 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 60px;
-  height: 60px;
-  background: rgba(0, 0, 0, 0.7);
+  width: 70px;
+  height: 70px;
+  background: rgba(99, 102, 241, 0.9);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
   pointer-events: none;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+}
+
+.videoContainer:hover .playOverlay {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.1);
 }
 
 .playIcon {
   width: 0;
   height: 0;
-  border-left: 15px solid white;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  margin-left: 3px;
+  border-left: 20px solid white;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  margin-left: 4px;
 }
 
 .infoOverlay {
@@ -73,11 +83,15 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-  padding: 2rem 1.5rem 1.5rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
+  padding: 3rem 1.5rem 1.5rem;
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
+}
+
+.videoContainer:hover .infoOverlay {
+  opacity: 1;
 }
 
 .infoCategory {
@@ -86,13 +100,15 @@
   margin: 0 0 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-weight: 500;
 }
 
 .infoTitle {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 600;
   margin: 0 0 0.5rem;
   color: white;
+  line-height: 1.3;
 }
 
 .infoMeta {
@@ -102,24 +118,47 @@
   line-height: 1.4;
 }
 
+/* Loading Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.videoContainer.loading {
+  animation: pulse 2s ease-in-out infinite;
+}
+
 /* Responsive Grid */
 @media (max-width: 1024px) {
   .portfolioGrid {
     grid-template-columns: repeat(8, 1fr);
+    gap: 1.5rem;
   }
   
-  .portfolioItem:nth-child(1) { grid-column: 1 / 5; grid-row: 1 / 4; }
-  .portfolioItem:nth-child(2) { grid-column: 5 / 9; grid-row: 1 / 6; }
-  .portfolioItem:nth-child(3) { grid-column: 1 / 5; grid-row: 4 / 7; }
-  .portfolioItem:nth-child(4) { grid-column: 5 / 9; grid-row: 6 / 9; }
-  .portfolioItem:nth-child(5) { grid-column: 1 / 5; grid-row: 7 / 10; }
-  .portfolioItem:nth-child(6) { grid-column: 5 / 9; grid-row: 9 / 12; }
+  .portfolioItem:nth-child(3n+1) { 
+    grid-column: 1 / 5; 
+    grid-row: auto / span 3; 
+  }
+  
+  .portfolioItem:nth-child(3n+2) { 
+    grid-column: 5 / 9; 
+    grid-row: auto / span 4; 
+  }
+  
+  .portfolioItem:nth-child(3n+3) { 
+    grid-column: 1 / 5; 
+    grid-row: auto / span 3; 
+  }
 }
 
 @media (max-width: 768px) {
   .portfolioGrid {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(auto-fit, 250px);
+    grid-auto-rows: 250px;
     gap: 1.5rem;
   }
   
@@ -129,26 +168,55 @@
   }
   
   .playOverlay {
+    width: 60px;
+    height: 60px;
+    opacity: 0.8;
+  }
+  
+  .playIcon {
+    border-left-width: 16px;
+    border-top-width: 10px;
+    border-bottom-width: 10px;
+  }
+  
+  .infoOverlay {
+    padding: 2rem 1rem 1rem;
+    opacity: 1;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.6) 60%, transparent 100%);
+  }
+  
+  .infoTitle {
+    font-size: 1.1rem;
+  }
+  
+  .infoCategory,
+  .infoMeta {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolioGrid {
+    grid-auto-rows: 220px;
+    gap: 1rem;
+  }
+  
+  .playOverlay {
     width: 50px;
     height: 50px;
   }
   
   .playIcon {
-    border-left-width: 12px;
-    border-top-width: 8px;
-    border-bottom-width: 8px;
-  }
-  
-  .infoOverlay {
-    padding: 1.5rem 1rem 1rem;
+    border-left-width: 14px;
+    border-top-width: 9px;
+    border-bottom-width: 9px;
   }
   
   .infoTitle {
     font-size: 1rem;
   }
   
-  .infoCategory,
-  .infoMeta {
-    font-size: 0.8rem;
+  .infoOverlay {
+    padding: 1.5rem 0.75rem 0.75rem;
   }
 }
