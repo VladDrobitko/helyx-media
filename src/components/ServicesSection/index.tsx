@@ -26,7 +26,6 @@ export const ServicesSection: React.FC = () => {
         "Concept development",
         "Professional filming",
         "Complete post-production", 
-        "Equipment & crew included",
         "3 revision rounds included"
       ],
       description: "End-to-end video production service covering every aspect from initial concept through final delivery. We handle pre-production planning, professional filming, and comprehensive post-production."
