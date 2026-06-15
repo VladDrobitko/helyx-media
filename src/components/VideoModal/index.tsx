@@ -174,7 +174,6 @@ export const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, videoDa
                 onLoadedMetadata={handleLoadedMetadata}
                 onPlay={handlePlay}
                 onPause={handlePause}
-                onClick={handleVideoClick}
                 preload="metadata"
                 playsInline
                 controls
@@ -188,6 +187,13 @@ export const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, videoDa
             </div>
           )}
         </div>
+
+        {/* Description */}
+        {videoData.description && (
+          <div className={styles.videoModalDescription}>
+            <p>{videoData.description}</p>
+          </div>
+        )}
       </div>
     </div>
   );

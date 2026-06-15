@@ -4,6 +4,7 @@ import type { PageType } from '@/types';
 import { PortfolioService, type PortfolioVideo } from '@/services/portfolioService';
 import { ContactService, type ContactSubmission } from '@/services/contactService';
 import { AddVideoModal } from '@/components/AddVideoModal';
+import { supabase } from '@/lib/supabase';
 import styles from './AdminPage.module.css';
 
 interface AdminPageProps {
@@ -18,12 +19,26 @@ export const AdminPage: React.FC<AdminPageProps> = ({ setCurrentPage }) => {
   const [loading, setLoading] = useState(true);
   const [isAddVideoModalOpen, setIsAddVideoModalOpen] = useState(false);
 
-  // Check if already authenticated
+  // Check authentication status
   useEffect(() => {
-    const auth = sessionStorage.getItem('admin_auth');
-    if (auth === 'true') {
-      setIsAuthenticated(true);
-    }
+    const checkAuth = async () => {
+      if (supabase) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          setIsAuthenticated(true);
+          sessionStorage.setItem('admin_auth', 'true');
+        } else {
+          setIsAuthenticated(false);
+          sessionStorage.removeItem('admin_auth');
+        }
+      } else {
+        const auth = sessionStorage.getItem('admin_auth');
+        if (auth === 'true') {
+          setIsAuthenticated(true);
+        }
+      }
+    };
+    checkAuth();
   }, []);
 
   useEffect(() => {
@@ -121,7 +136,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({ setCurrentPage }) => {
           </button>
           <h1 className={styles.title}>Admin Panel</h1>
           <button
-            onClick={() => {
+            onClick={async () => {
+              if (supabase) {
+                await supabase.auth.signOut();
+              }
               sessionStorage.removeItem('admin_auth');
               setIsAuthenticated(false);
             }}
@@ -330,21 +348,44 @@ const LoginForm: React.FC<{
   onLogin: () => void;
   setCurrentPage: (page: PageType) => void;
 }> = ({ onLogin, setCurrentPage }) => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setIsLoading(true);
     
-    // Simple password check - in production, use proper authentication
-    const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
-    
-    if (password === adminPassword) {
-      sessionStorage.setItem('admin_auth', 'true');
-      onLogin();
-      setError('');
-    } else {
-      setError('Incorrect password');
+    try {
+      if (supabase) {
+        const { data, error: authError } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+        
+        if (authError) {
+          setError(authError.message);
+        } else {
+          sessionStorage.setItem('admin_auth', 'true');
+          onLogin();
+        }
+      } else {
+        // Simple password check for demo mode
+        const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
+        if (password === adminPassword) {
+          sessionStorage.setItem('admin_auth', 'true');
+          onLogin();
+        } else {
+          setError('Incorrect password (Demo mode)');
+        }
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An unexpected error occurred during login');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -362,6 +403,24 @@ const LoginForm: React.FC<{
           <h1 className={styles.loginTitle}>Admin Access</h1>
           
           <form onSubmit={handleSubmit} className={styles.form}>
+            {supabase && (
+              <div className={styles.inputGroup}>
+                <label htmlFor="email" className={styles.label}>
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={styles.input}
+                  placeholder="admin@example.com"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+            )}
+            
             <div className={styles.inputGroup}>
               <label htmlFor="password" className={styles.label}>
                 Password
@@ -372,8 +431,9 @@ const LoginForm: React.FC<{
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className={styles.input}
-                placeholder="Enter admin password"
+                placeholder="Enter password"
                 required
+                disabled={isLoading}
               />
             </div>
             
@@ -381,13 +441,18 @@ const LoginForm: React.FC<{
               <div className={styles.error}>{error}</div>
             )}
             
-            <button type="submit" className={styles.loginButton}>
-              Login
+            <button type="submit" className={styles.loginButton} disabled={isLoading}>
+              {isLoading ? 'Signing in...' : 'Login'}
             </button>
           </form>
           
           <div className={styles.loginHint}>
-            <p>Use admin password to access the panel</p>
+            <p>
+              {supabase 
+                ? 'Sign in with your Supabase administrator account' 
+                : 'Use admin password to access the panel (Demo Mode)'
+              }
+            </p>
           </div>
         </div>
       </div>

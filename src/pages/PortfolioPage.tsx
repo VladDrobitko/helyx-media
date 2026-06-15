@@ -138,29 +138,16 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
 
   // Функция для получения grid стилей с учетом формата видео
   const getGridStyles = (index: number, format: string) => {
-    // Динамическое размещение с учетом формата
     const isHorizontal = format === 'horizontal';
     const isVertical = format === 'vertical';
     
-    // Базовая логика: 3 видео в ряд
-    const row = Math.floor(index / 3);
-    const col = index % 3;
-    
-    let gridColumn: string;
-    let gridRow: string;
+    let gridColumn = 'span 4';
+    let gridRow = 'span 4'; // Default square format
     
     if (isHorizontal) {
-      // Горизонтальные видео (16:9) - занимают 4 колонки
-      gridColumn = `${col * 4 + 1} / ${col * 4 + 5}`;
-      gridRow = `${row * 3 + 1} / ${row * 3 + 3}`;
+      gridRow = 'span 3';
     } else if (isVertical) {
-      // Вертикальные видео (9:16) - занимают 4 колонки, но больше по высоте
-      gridColumn = `${col * 4 + 1} / ${col * 4 + 5}`;
-      gridRow = `${row * 4 + 1} / ${row * 4 + 5}`;
-    } else {
-      // Квадратные видео (1:1) - занимают 4 колонки
-      gridColumn = `${col * 4 + 1} / ${col * 4 + 5}`;
-      gridRow = `${row * 2 + 1} / ${row * 2 + 3}`;
+      gridRow = 'span 5';
     }
     
     return { gridColumn, gridRow };

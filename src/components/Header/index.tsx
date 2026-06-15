@@ -139,6 +139,14 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) =
           </li>
           <li>
             <button
+              className={`${styles.navLink} ${currentPage === 'portfolio' ? styles.active : ''}`}
+              onClick={() => navigateToPage('portfolio')}
+            >
+              Portfolio
+            </button>
+          </li>
+          <li>
+            <button
               className={styles.navLink}
               onClick={() => scrollToSection('contact')}
             >

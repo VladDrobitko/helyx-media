@@ -110,6 +110,19 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
             );
           })}
         </div>
+
+        <div className={styles.viewMoreContainer}>
+          <button 
+            className={styles.viewMoreButton}
+            onClick={() => {
+              setCurrentPage('portfolio');
+              window.history.pushState({}, '', '/portfolio');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            View Full Portfolio
+          </button>
+        </div>
       </div>
     </section>
   );

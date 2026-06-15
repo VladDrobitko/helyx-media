@@ -37,15 +37,15 @@ export const getFaviconUrl = (): string => {
   return FAVICON_URL;
 };
 
-// Fallback to local files if Supabase is not configured
+// Fallback to public CDN files if Supabase is not configured
 export const getVideoUrl = (videoKey: keyof typeof VIDEO_URLS): string => {
   if (!import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL === 'https://demo.supabase.co') {
-    // Fallback to local files
+    // Fallback to public stock videos (Mixkit CDN)
     const localUrls = {
-      heroBackground: '/videos/hero-background.webm',
-      portfolioHeroBackground: '/videos/portfolio/hero-background.webm',
-      portfolioVideo1: '/videos/portfolio/video1.webm',
-      portfolioVideo2: '/videos/portfolio/video2.webm',
+      heroBackground: 'https://assets.mixkit.co/videos/preview/mixkit-urban-city-traffic-at-night-41584-large.mp4',
+      portfolioHeroBackground: 'https://assets.mixkit.co/videos/preview/mixkit-urban-city-traffic-at-night-41584-large.mp4',
+      portfolioVideo1: 'https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-tattoo-artist-working-42247-large.mp4',
+      portfolioVideo2: 'https://assets.mixkit.co/videos/preview/mixkit-girl-running-on-the-beach-at-sunset-39803-large.mp4',
     };
     return localUrls[videoKey];
   }
@@ -54,11 +54,11 @@ export const getVideoUrl = (videoKey: keyof typeof VIDEO_URLS): string => {
 
 export const getThumbnailUrl = (thumbnailKey: keyof typeof THUMBNAIL_URLS): string => {
   if (!import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL === 'https://demo.supabase.co') {
-    // Fallback to local files
+    // Fallback to public images (Unsplash CDN)
     const localUrls = {
-      heroBackgroundPoster: '/images/portfolio/hero-background-poster.jpeg',
-      video1Poster: '/images/portfolio/video1-poster.jpeg',
-      video2Poster: '/images/portfolio/video2-poster.jpeg',
+      heroBackgroundPoster: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=1200&auto=format&fit=crop&q=80',
+      video1Poster: 'https://images.unsplash.com/photo-1598104358684-f4b4576cbb34?w=800&auto=format&fit=crop&q=80',
+      video2Poster: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80',
     };
     return localUrls[thumbnailKey];
   }
